@@ -1,0 +1,154 @@
+Follow Palm(Color not Colour)
+#include <kipr/botball.h>
+int b_servo= 0; //servo arm
+int t_servo= 3; //front servo arm
+int red= 0; //Channel 0 is red
+int green= 1;// Channel 1 is green
+int plow= 500; //servo arm position
+int l_motor= 3; //left motor
+int r_motor= 0; //right motor 
+int r_speed= 50;  //right speed
+int l_speed= 50;  //left speed
+int v_speed= 80; //veer speed
+
+int main()
+{
+    camera_open_black();     //opens connection of camera
+    
+       printf("camera On\n");
+    while (digital (8) == 0)
+    {
+        camera_update();
+        if (get_object_count(red) < 1)
+        {
+         printf("No objects detected.\n");
+         }
+        else
+        {
+        if (get_object_center_x(red, 0) < 80)
+        {
+        printf("Red is on the left!\n");
+        veer_l();
+        printf("moving left.\n"); 
+        }
+        if (get_object_center_x(red, 0) >80)
+        {
+        printf("Red is on the right!\n");
+        veer_r();
+        printf("moving right.\n");
+        }
+        if (get_object_center_y(red,0) >90)
+        {
+          printf("Stop\n");
+          ao();
+            break;
+        }
+    }
+}
+    camera_close();
+    
+    
+    
+    
+    return 0;
+}
+
+//FUNCTION DEFINITIONS//
+void forward(){
+    printf("moving forward\n");
+    motor(r_motor,r_speed);
+    motor(l_motor,l_speed);
+}
+void veer_r(){
+    printf("veering right\n");
+    motor(r_motor,r_speed);
+    motor(l_motor,v_speed);
+    }
+void veer_l(){
+    printf("veering left\n");
+    motor(r_motor,v_speed);
+    motor(l_motor,l_speed);
+          }
+Three Colors
+#include <kipr/botball.h>
+int b_servo= 0; //servo arm
+int t_servo= 3; //front servo arm
+int red= 0; //Channel 0 is red
+int blue= 1;// Channel 1 is green
+int pink= 2; // channel 2 is yellow
+
+int main()
+{
+
+	camera_open_black();
+	while (digital(8) == 0)
+	{
+    	camera_update();
+		if ((get_object_count(red) <= 0)&&(get_object_count(pink) <= 0)&&(get_object_count(blue) <= 0))
+	{
+			printf("No objects detected.\n");
+		}
+		if (get_object_count(red) > 0)
+	{
+			printf("Object is red!\n");
+		}
+        if (get_object_count(blue) > 0)
+	{
+			printf("Object is Blue!\n");
+		}
+        if (get_object_count(pink) > 0)
+	{
+			printf("Object is Pink!\n");
+		}
+	}
+
+	camera_close();
+    printf("Three Colors\n");
+    return 0;
+}
+
+Follow Palms with Servo
+#include <kipr/botball.h>
+int b_servo= 0; //servo arm
+int t_servo= 3; //front servo arm
+int center=600;// camera center
+int red= 0; //Channel 0 is red
+int green= 1;// Channel 1 is green
+int plow= 500; //servo arm position
+int l_motor= 3; //left motor
+int r_motor= 0; //right motor 
+int r_speed= 50;  //right speed
+int l_speed= 50;  //left speed
+int v_speed= 80; //veer speed
+int short_p= 750; //Short pause
+int medium_p= 800; //medium pause
+int long_p= 1000;  //long pause
+int xl_long_p= 1500;  //XL pause
+
+int main()
+    {
+    enable_servos();
+	camera_open_black();
+	while (digital(8) == 0)
+		{
+		camera_update();
+		if (get_object_count(red) == 0)
+		{
+		printf("No objects detected.\n");
+		}
+		if (get_object_center_x(red, 0) < 80)
+		{
+		printf("Object is on the left!\n");
+            set_servo_position(t_servo,get_object_center_x(red, 0)*4);  
+        printf("servo is turninng left!\n");
+		}
+		else
+		{
+		printf("Object is on the right!\n");
+			set_servo_position(t_servo,get_object_center_x(red, 0)*2);
+		}
+	}
+camera_close();
+    printf("Servo following palm\n");
+    return 0;
+}
