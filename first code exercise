@@ -1,0 +1,36 @@
+// Created on Thu March 19 2020
+int lmotor= 0; //left motor
+int rmotor= 2; //right motor
+int rbump= 9; //right bump
+int lbump= 8; //left bump
+int speed= 50;  //right speed
+int pause=500; //pause
+
+//FUNCTION DEFINITIONS//
+void straight(){
+printf("moving straight\n");
+    motor(rmotor,speed);
+    motor(lmotor,speed);
+}
+
+void turn(){
+printf("turning\n");
+     motor(lmotor,speed);
+     ao();   //all off
+}
+
+
+int main(){
+while(digital(rbump)==0){ //No wall, going straight
+        straight();
+}
+  ao();
+while(digital(lbump)==0){//No wall, turning
+turn();
+}
+ao();
+   
+printf("Hello, World!\n");
+return 0;
+
+}
