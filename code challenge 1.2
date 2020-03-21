@@ -1,0 +1,58 @@
+// Created on Sat March 21 2020
+int lmotor= 0; //left motor
+int rmotor= 2; //right motor
+int rbump= 9; //right bump
+int lbump= 8; //left bump
+int lsensor= 5; //left reflectance sensor
+int speed= 40;  // speed
+int vspeed= 41; //veer speed
+int pause= 1100; //pause
+
+//FUNCTION DEFINITIONS//
+void straight(){
+printf("moving straight\n");
+motor(rmotor,speed);
+motor(lmotor,speed);
+
+}
+
+void veer_r(){
+printf("veering right\n");
+motor(rmotor,speed);
+motor(lmotor,vspeed);
+}
+
+void veer_l(){
+printf("veering left\r");
+motor(rmotor,vspeed);
+motor(lmotor,speed);
+}
+void turn(){
+printf("turning\n");
+motor(lmotor,speed);
+msleep(pause);
+ao();
+}
+
+int main(){
+
+//initial turn
+turn();
+
+straight();
+
+while(digital(lbump)==0){
+printf("I'm in the loop\n");
+if(digital(rbump)==1){  //Wall, veering left
+        veer_l();
+}
+printf("lsensor=%d\n",analog(lsensor)); //to figure out what the values are
+if(analog(lsensor) > 0) { //if senses black tape, veer right
+veer_r();
+}
+
+}
+ao(); // left bump triggered, while loop will break and turn off all motors
+return 0;
+
+}
