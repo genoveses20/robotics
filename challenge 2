@@ -1,0 +1,66 @@
+// Created on Mon March 23 2020
+
+int lmotor= 0; //left motor
+int rmotor= 2; //right motor
+int rbump= 9; //right bump
+int lbump= 8; //left bump
+int lsensor= 5; //left reflectance sensor
+int speed= 50; //regular speed
+int ispeed= -50; //inverse of regular speed, useful for turning
+int vspeed= 55; //veer speed
+int pause= 475; //pause
+int pause_more= 1000; // slightly longer pause
+int pause_most= 1700; //much longer pause
+
+// Function Definitions // 
+void straight(){
+	printf("going straight\n");
+	motor(lmotor,speed);
+	motor(rmotor,speed);
+}
+
+void reversal(){
+	printf("spin move\n");
+	motor(lmotor,ispeed); //inverse speed used to help spin counter-clockwise
+	motor(rmotor,speed);
+	msleep(pause_more);
+}
+
+void rturning(){
+	printf("commencing rturn\n");
+	motor(lmotor,speed);
+	motor(rmotor,ispeed); //inverse speed used to help turn right
+	msleep(pause);
+	ao();
+}
+
+void hit_wall(){
+	while(digital(rbump)==0){ //when it does not detect a wall
+		straight(); //proceed forward
+	if(digital(rbump)==1){ //when robot hits the wall with right bump sensor
+		reversal(); //then it spins
+		break;
+		
+	}
+	if(digital(lbump)==1){
+		reversal(); //does the spin move for left bump sensor
+		break;
+	  }
+	}
+}
+
+int main(){
+	
+	straight();
+	msleep(pause_most);
+	ao();
+	
+	rturning(); //in this part the robot is making its inital moves and   turning right to get in position
+	
+	hit_wall();  //commences next part in which it goes to the wall and makes adjustment for next coding challenge
+	
+	ao();
+	
+	printf("Hello, World!\n");
+	return 0;
+}
