@@ -1,0 +1,113 @@
+int lmotor= 0; //left motor
+int rmotor= 2; //right motor
+int rbump= 9; //right bump
+int lbump= 8; //left bump
+int lsensor= 5; //left reflectance sensor
+int ranger= 2; //right range
+int speed= 50; //regular speed
+int ispeed= -50; //inverse of regular speed, useful for turning
+int vspeed= 70; //veer speed
+int speedy= 20; //regular speed when veering
+int pause= 450; //pause
+int pause_more= 850; // slightly longer pause
+int pause_most= 1500; //much longer pause
+int zero= 0;// zero for no wall
+int one= 1;// one for wall
+int line= 100;// valuse of the line
+int line2= 850; //line value up top
+int wall= 150; //wall value
+
+// Function Definitions // 
+
+void straight(){
+    printf("going straight\n");
+    motor(lmotor,speed);
+    motor(rmotor,speed);
+}
+void reversal(){
+    printf("spin move\n");
+    motor(lmotor,ispeed); //inverse speed used to help spin counter-clockwise
+    motor(rmotor,speed);
+    msleep(pause_more);
+}
+void rturning(){
+    printf("commencing rturn\n");
+    motor(lmotor,speed);
+    motor(rmotor,ispeed); //inverse speed used to help turn right
+    msleep(pause);
+    ao();
+}
+void hit_wall(){
+while(digital(rbump)==zero){ //when it does not detect a wall
+    straight(); //proceed forward
+    if(digital(rbump)==one){ //when robot hits the wall with right bump sensor
+    reversal(); //then it spins
+    break;
+    }
+    if(digital(lbump)==one){
+    reversal(); //does the spin move for left bump sensor
+ break;
+  }
+}
+}
+void rveer(){//the robot will veer to the right
+    printf("commencing veer right\n");
+    motor(rmotor,speedy);
+    motor(lmotor,vspeed);
+    }
+void lveer(){//the robot will veer to the right
+    printf("commencing veer left\n");
+    motor(rmotor,vspeed);
+    motor(lmotor,speedy);
+    }
+
+void liningup(){ //the robot will follow the line 
+        while(digital(lbump)==zero){
+          straight();//going straight, while the left bumper is zero
+        if(analog(lsensor) >line){
+            rveer(); // If it gets too close to the side, veers
+        }
+        if(analog(lsensor) <line){
+            lveer(); // If it gets to far it veers
+          }
+        }
+}
+void walling(){  
+        while(analog(lsensor)<=line2){
+          straight();//move both forward
+        if(analog(ranger) >wall){
+            rveer(); // If it gets too close to the side, veers
+        }
+        if(analog(ranger) <wall){
+            lveer(); // If it gets to far it veers
+          }
+        }
+}
+
+int main(){
+    straight();
+    msleep(pause_most);
+    ao();
+    rturning(); //in this part the robot is making its inital moves and turning right to get in position
+    hit_wall();  //commences next part in which it goes to the wall and makes adjustment for next coding challenge
+    ao();
+    straight();
+    msleep(pause_more);
+    ao();
+    liningup();//looking for line and following it
+    ao();
+    reversal();
+    ao();
+    straight();
+    msleep(pause);
+    ao();
+    walling();
+    ao();
+    
+
+printf("Hello, World!\n");
+
+return 0;
+
+}
+
